@@ -16,10 +16,10 @@ export const Pizza = () => {
                     throw new Error('No se puede cargar correctamente');
                 }
 
-                // Asumiendo que data es un objeto, no un array
+                
                 const data = await response.json();
 
-                // Si la pizza se obtiene directamente como un objeto
+                
                 if (data && data.id === 'p001') {
                     setPizza(data);
                 } else {
