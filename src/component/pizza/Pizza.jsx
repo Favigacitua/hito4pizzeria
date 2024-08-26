@@ -1,29 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { Header } from '../header/Header';
 import Button from 'react-bootstrap/Button';
-import '../pizza/pizza.css'
+import '../pizza/pizza.css';
 
 export const Pizza = () => {
     const [pizza, setPizza] = useState(null);
     const [error, setError] = useState(null);
-    const [pizzaId] = useState('p001');
 
     useEffect(() => {
         const fetchPizza = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/pizzas');
+                const response = await fetch('http://localhost:5000/api/pizzas/p001');
 
                 if (!response.ok) {
                     throw new Error('No se puede cargar correctamente');
                 }
 
+                // Asumiendo que data es un objeto, no un array
                 const data = await response.json();
-                
-                
-                const foundPizza = data.find(pizza => pizza.id === pizzaId);
 
-                if (foundPizza) {
-                    setPizza(foundPizza);
+                // Si la pizza se obtiene directamente como un objeto
+                if (data && data.id === 'p001') {
+                    setPizza(data);
                 } else {
                     setError('Pizza no encontrada');
                 }
@@ -35,7 +33,7 @@ export const Pizza = () => {
         };
 
         fetchPizza();
-    }, [pizzaId]);
+    }, []);
 
     return (
         <>
@@ -49,18 +47,17 @@ export const Pizza = () => {
                         style={{ width: '500px', height: 'auto' }}
                     />
                     <div className='content'>
-                    <h2 style={{fontWeight:'bold', paddingBottom:'1rem'}}>{pizza.name}</h2>
-                    <p style={{fontSize:'18px', color:'gray', paddingBottom:'1rem'}}>{pizza.desc}</p>
+                        <h2 style={{fontWeight:'bold', paddingBottom:'1rem'}}>{pizza.name}</h2>
+                        <p style={{fontSize:'18px', color:'gray', paddingBottom:'1rem'}}>{pizza.desc}</p>
+                        
+                        {pizza.ingredients.map((ingredient, index) => (
+                            <p key={index}>&#x1f355; {ingredient}</p>
+                        ))}
+                        <div style={{ height: '1px', backgroundColor: 'grey', margin: '10px 0', width: '100%', marginTop:'2rem' }}></div>
                     
-                  {pizza.ingredients.map((ingredient, index) => (
-                    <p key={index}>&#x1f355;{ingredient}</p>
-                  ))}
-                  <div style={{ height: '1px', backgroundColor: 'grey', margin: '10px 0', width: '100%', marginTop:'2rem' }}></div>
-                
-                    <h3 style={{fontWeight:'bold', color:'black'}}>Precio: ${pizza.price}</h3>
-                    <Button variant="dark" style={{height:'3rem', float:'right'}} >Añadir &#x1F6D2;</Button>
+                        <h3 style={{fontWeight:'bold', color:'black'}}>Precio: ${pizza.price}</h3>
+                        <Button variant="dark" style={{height:'3rem', float:'right'}}>Añadir &#x1F6D2;</Button>
                     </div>
-
                 </div>
             )}
         </>
